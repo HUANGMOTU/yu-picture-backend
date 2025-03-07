@@ -1,12 +1,14 @@
 package com.yupi.yupicturebackend.service;
 
-import com.yupi.yupicturebackend.common.BaseResponse;
-import com.yupi.yupicturebackend.model.dto.UserRegisterRequest;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yupi.yupicturebackend.model.dto.user.UserQueryRequest;
 import com.yupi.yupicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yupi.yupicturebackend.model.vo.LoginUserVO;
+import com.yupi.yupicturebackend.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author 24826
@@ -33,9 +35,16 @@ public interface UserService extends IService<User> {
 
     LoginUserVO getLoginUserVO(User user);
 
+    UserVO getUserVO(User user);
+
+    List<UserVO> getUserVOList(List<User> userList);
     /**
      * 用户注销
      */
     boolean userLogout(HttpServletRequest request);
 
+    /**
+     * 获取查询条件
+     */
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 }
