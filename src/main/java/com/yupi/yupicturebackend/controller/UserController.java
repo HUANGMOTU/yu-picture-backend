@@ -41,7 +41,8 @@ public class UserController {
         String userPassword = userLoginRequest.getUserPassword();
 
 
-        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+        User user = userService.userLogin(userAccount, userPassword, request);
+        LoginUserVO loginUserVO = userService.getLoginUserVO(user);
         return ResultUtils.success(loginUserVO);
     }
 
@@ -49,5 +50,11 @@ public class UserController {
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(loginUser));
+    }
+
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        boolean result = userService.userLogout(request);
+        return ResultUtils.success(result);
     }
 }

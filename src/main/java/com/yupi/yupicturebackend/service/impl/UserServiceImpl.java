@@ -95,7 +95,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public boolean userLogout(HttpServletRequest request) {
+        // 可能出现缓存数据不一致问题 根据缓存的id去数据库重新查
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        // 对象为空 未登录
+        if (userObj == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
+        }
+        // 移除登录态
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return true;
+    }
+
+    @Override
+    public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 校验
         ThrowUtils.throwIf(ObjectUtil.hasNull(userAccount,userPassword), ErrorCode.PARAMS_ERROR, "账号或密码为空");
         ThrowUtils.throwIf( userAccount.length() < 4, ErrorCode.PARAMS_ERROR, "账号太短");
@@ -112,8 +125,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         ThrowUtils.throwIf(user == null, ErrorCode.PARAMS_ERROR, "用户不存在");
         // 保存登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return this.getLoginUserVO(user);
+        return user;
     }
+
 
     @Override
     public LoginUserVO getLoginUserVO(User user) {
@@ -124,6 +138,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         BeanUtil.copyProperties(user, loginUserVO);
         return loginUserVO;
     }
+
+
 
 
 }
