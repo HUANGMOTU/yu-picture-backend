@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.exception.ThrowUtils;
+import com.yupi.yupicturebackend.model.dto.space.SpaceAddRequest;
 import com.yupi.yupicturebackend.model.dto.space.SpaceQueryRequest;
 import com.yupi.yupicturebackend.model.entity.Space;
 import com.yupi.yupicturebackend.model.entity.Space;
@@ -22,6 +23,7 @@ import com.yupi.yupicturebackend.model.vo.UserVO;
 import com.yupi.yupicturebackend.service.SpaceService;
 import com.yupi.yupicturebackend.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +44,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private TransactionTemplate transactionTemplate;
 
 
 
@@ -168,6 +173,18 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
         spaceVOPage.setRecords(SpaceVOList);
         // 返回空间VO分页对象
         return spaceVOPage;
+    }
+
+    /**
+     * 创建空间
+     * @param spaceAddRequest
+     * @param request
+     * @return
+     */
+    @Override
+    public long addSpace(SpaceAddRequest spaceAddRequest, HttpServletRequest request) {
+        // 转换成实体类
+        return 0;
     }
 
 

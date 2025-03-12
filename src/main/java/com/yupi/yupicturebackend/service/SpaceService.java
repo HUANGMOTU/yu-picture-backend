@@ -3,6 +3,7 @@ package com.yupi.yupicturebackend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.yupi.yupicturebackend.model.dto.space.SpaceAddRequest;
 import com.yupi.yupicturebackend.model.dto.space.SpaceQueryRequest;
 import com.yupi.yupicturebackend.model.entity.Space;
 import com.yupi.yupicturebackend.model.entity.Space;
@@ -29,4 +30,9 @@ public interface SpaceService extends IService<Space> {
 
     Page<SpaceVO> getSpaceVOPage(Page<Space> SpacePage, HttpServletRequest request);
 
+    /**
+     * 创建空间
+     * @return
+     */
+    long addSpace(SpaceAddRequest spaceAddRequest, HttpServletRequest request);
 }
