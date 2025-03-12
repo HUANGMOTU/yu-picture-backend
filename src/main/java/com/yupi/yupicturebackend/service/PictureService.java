@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qcloud.cos.exception.CosClientException;
+import com.yupi.yupicturebackend.model.dto.file.PictureEditRequest;
 import com.yupi.yupicturebackend.model.dto.file.PictureQueryRequest;
 import com.yupi.yupicturebackend.model.dto.picture.PictureReviewRequest;
 import com.yupi.yupicturebackend.model.dto.picture.PictureUploadByBatchRequest;
@@ -34,6 +35,8 @@ public interface PictureService extends IService<Picture> {
     PictureVO uploadPicture(Object inputSource,
                             PictureUploadRequest pictureUploadRequest,
                             User loginUser);
+
+    void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
 
     /**
      * 将查询条件转换为 mybatis-plus 格式
@@ -94,4 +97,7 @@ public interface PictureService extends IService<Picture> {
     @Async
     void clearPictureFile(Picture oldPicture);
 
+    void checkPictureAuth(User loginUser, Picture picture);
+
+    void deletePicture(long pictureId, User loginUser);
 }

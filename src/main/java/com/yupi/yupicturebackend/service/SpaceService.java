@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.yupi.yupicturebackend.model.dto.space.SpaceAddRequest;
 import com.yupi.yupicturebackend.model.dto.space.SpaceQueryRequest;
-import com.yupi.yupicturebackend.model.entity.Space;
+import com.yupi.yupicturebackend.model.entity.*;
 import com.yupi.yupicturebackend.model.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yupi.yupicturebackend.model.vo.SpaceVO;
@@ -34,5 +34,6 @@ public interface SpaceService extends IService<Space> {
      * 创建空间
      * @return
      */
-    long addSpace(SpaceAddRequest spaceAddRequest, HttpServletRequest request);
+    long addSpace(SpaceAddRequest spaceAddRequest, User loginUser);
+
 }

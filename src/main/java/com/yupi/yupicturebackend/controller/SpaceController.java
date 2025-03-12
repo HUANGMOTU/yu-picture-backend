@@ -13,11 +13,10 @@ import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.exception.ThrowUtils;
 
-import com.yupi.yupicturebackend.model.dto.space.SpaceEditRequest;
-import com.yupi.yupicturebackend.model.dto.space.SpaceQueryRequest;
-import com.yupi.yupicturebackend.model.dto.space.SpaceUpdateRequest;
+import com.yupi.yupicturebackend.model.dto.space.*;
 import com.yupi.yupicturebackend.model.entity.Space;
 import com.yupi.yupicturebackend.model.entity.User;
+import com.yupi.yupicturebackend.model.enums.SpaceLevelEnum;
 import com.yupi.yupicturebackend.model.vo.SpaceVO;
 import com.yupi.yupicturebackend.service.SpaceService;
 import com.yupi.yupicturebackend.service.SpaceService;
@@ -35,6 +34,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/space")
@@ -45,8 +45,6 @@ public class SpaceController {
 
     @Resource
     private UserService userService;
-
-
 
 
     /**
@@ -140,13 +138,12 @@ public class SpaceController {
     }
 
 
-
     /**
      * 分页获取空间列表（封装类）
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<SpaceVO>> listSpaceVOByPage(@RequestBody SpaceQueryRequest spaceQueryRequest,
-                                                             HttpServletRequest request) {
+                                                         HttpServletRequest request) {
         long current = spaceQueryRequest.getCurrent();
         long size = spaceQueryRequest.getPageSize();
         // 限制爬虫
@@ -157,6 +154,19 @@ public class SpaceController {
         // 获取封装类
         return ResultUtils.success(spaceService.getSpaceVOPage(SpacePage, request));
     }
+
+    @GetMapping("/list/level")
+    public BaseResponse<List<SpaceLevel>> listSpaceLevel() {
+        List<SpaceLevel> spaceLevelList = Arrays.stream(SpaceLevelEnum.values()) // 获取所有枚举
+                .map(spaceLevelEnum -> new SpaceLevel(
+                        spaceLevelEnum.getValue(),
+                        spaceLevelEnum.getText(),
+                        spaceLevelEnum.getMaxCount(),
+                        spaceLevelEnum.getMaxSize()))
+                .collect(Collectors.toList());
+        return ResultUtils.success(spaceLevelList);
+    }
+
 
     /**
      * 编辑空间（给用户使用）
@@ -191,4 +201,19 @@ public class SpaceController {
         return ResultUtils.success(true);
     }
 
+    /**
+     * 创建空间
+     *
+     * @param spaceAddRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/add")
+    public BaseResponse<Long> addSpace(@RequestBody SpaceAddRequest spaceAddRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(spaceAddRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+
+        long newId = spaceService.addSpace(spaceAddRequest, loginUser);
+        return ResultUtils.success(newId);
+    }
 }
