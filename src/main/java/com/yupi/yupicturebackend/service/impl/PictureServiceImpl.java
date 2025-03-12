@@ -39,6 +39,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -363,6 +365,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     public void clearPictureFile(Picture oldPicture) {
         // 判断该图片是否被多条记录使用
         String pictureUrl = oldPicture.getUrl();
+        String thumbnailUrl = oldPicture.getThumbnailUrl();
         long count = this.lambdaQuery()
                 .eq(Picture::getUrl, pictureUrl)
                 .count();
@@ -370,12 +373,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         if (count > 1) {
             return;
         }
-        // FIXME 注意，这里的 url 包含了域名，实际上只要传 key 值（存储路径）就够了
-        cosManager.deleteObject(oldPicture.getUrl());
-        // 清理缩略图
-        String thumbnailUrl = oldPicture.getThumbnailUrl();
-        if (StrUtil.isNotBlank(thumbnailUrl)) {
-            cosManager.deleteObject(thumbnailUrl);
+        try {
+            String key = new URL(pictureUrl).getPath();
+            cosManager.deleteObject(key);
+            // 清理缩略图
+            if (StrUtil.isNotBlank(thumbnailUrl)) {
+                String thumbnailKey = new URL(thumbnailUrl).getPath();
+                cosManager.deleteObject(thumbnailKey);
+            }
+        }catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "图片清理失败");
         }
     }
 
