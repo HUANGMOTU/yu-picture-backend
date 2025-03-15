@@ -8,7 +8,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yupi.yupicturebackend.api.aliyunai.AliYunAiApi;
 import com.yupi.yupicturebackend.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.yupi.yupicturebackend.api.aliyunai.model.GetOutPaintingTaskResponse;
-import com.yupi.yupicturebackend.manager.annotation.AuthCheck;
+import com.yupi.yupicturebackend.annotation.AuthCheck;
 import com.yupi.yupicturebackend.api.imagesearch.ImageSearchApiFacade;
 import com.yupi.yupicturebackend.api.imagesearch.model.ImageSearchResult;
 import com.yupi.yupicturebackend.common.BaseResponse;
