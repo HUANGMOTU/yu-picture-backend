@@ -15,6 +15,8 @@ import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.exception.ThrowUtils;
 import com.yupi.yupicturebackend.manager.CosManager;
+import com.yupi.yupicturebackend.manager.auth.SaTokenContextHolder;
+import com.yupi.yupicturebackend.manager.auth.SpaceUserAuthContext;
 import com.yupi.yupicturebackend.manager.upload.FilePictureUpload;
 import com.yupi.yupicturebackend.manager.upload.PictureUploadTemplate;
 import com.yupi.yupicturebackend.manager.upload.UrlPictureUpload;
@@ -156,8 +158,11 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         // 构造要入库的图片信息
         Picture picture = new Picture();
         picture.setSpaceId(spaceId);
+        // 如果 spaceId 是 null 那么设置默认值为 0，如果要分库分表一定要补全 spaceId
+        picture.setSpaceId(Objects.isNull(picture.getSpaceId()) ? 0 : picture.getSpaceId());
         picture.setUrl(uploadPictureResult.getUrl());
         picture.setThumbnailUrl(uploadPictureResult.getThumbnailUrl());
+
         String picName = uploadPictureResult.getPicName();
 
         if( pictureUploadRequest.getPicName() != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())){
@@ -294,11 +299,14 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     }
 
     @Override
-    public PictureVO getPictureVO(Picture picture,  HttpServletRequest request) {
+    public PictureVO getPictureVO(Picture picture, HttpServletRequest request) {
         // 对象转封装类
         PictureVO pictureVO = PictureVO.objToVo(picture);
         // 关联查询用户信息
         Long userId = picture.getUserId();
+        User loginUser = userService.getLoginUser(request);
+        List<String> permissionList = ((SpaceUserAuthContext) SaTokenContextHolder.get(loginUser.getId().toString())).getPermissionList();
+        pictureVO.setPermissionList(permissionList.stream().filter(r -> r.contains("picture")).toList());
         if (userId != null && userId > 0) {
             User user = userService.getById(userId);
             UserVO userVO = userService.getUserVO(user);
@@ -306,6 +314,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         }
         return pictureVO;
     }
+
 
     /**
      * 分页获取图片封装

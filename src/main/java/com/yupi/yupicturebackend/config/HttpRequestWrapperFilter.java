@@ -3,7 +3,7 @@ package com.yupi.yupicturebackend.config;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import com.yupi.yupicturebackend.manager.auth.SaTokenContextHolder;
-import org.apache.http.impl.client.RequestWrapper;
+
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
