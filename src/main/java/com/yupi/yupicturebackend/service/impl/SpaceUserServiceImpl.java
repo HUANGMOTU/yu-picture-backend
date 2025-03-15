@@ -153,6 +153,15 @@ public class SpaceUserServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser
         return queryWrapper;
     }
 
+    @Override
+    public SpaceUser getBySpaceUserId(Long spaceId, Long userId) {
+        // 根据spaceId userId 从spaceuser表中查询
+        // 增加校验
+        QueryWrapper<SpaceUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("spaceId", spaceId);
+        queryWrapper.eq("userId", userId);
+        return this.getOne(queryWrapper);
+    }
 
 
 }

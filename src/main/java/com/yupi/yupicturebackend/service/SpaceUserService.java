@@ -58,5 +58,7 @@ public interface SpaceUserService extends IService<SpaceUser>{
      */
     QueryWrapper<SpaceUser> getQueryWrapper(SpaceUserQueryRequest spaceUserQueryRequest);
 
+    SpaceUser getBySpaceUserId(Long spaceId, Long userId);
+
 }
 

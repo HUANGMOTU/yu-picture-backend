@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Aspect
 @Component
-public class AuthInterceptor {
+public class OldAuthInterceptor {
 
     @Resource
     private UserService userService;
