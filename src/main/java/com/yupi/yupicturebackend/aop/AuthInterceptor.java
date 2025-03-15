@@ -1,6 +1,6 @@
 package com.yupi.yupicturebackend.aop;
 
-import com.yupi.yupicturebackend.annotation.AuthCheck;
+import com.yupi.yupicturebackend.manager.annotation.AuthCheck;
 import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.model.entity.User;
@@ -15,7 +15,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 @Aspect

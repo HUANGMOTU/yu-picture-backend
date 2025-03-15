@@ -64,7 +64,7 @@ public abstract class PictureUploadTemplate {
                     thumbnailCiObject = objectList.get(1);
                 }
                 // 封装压缩图返回结果
-                return buildResult(originFilename, compressedCiObject, thumbnailCiObject);
+                return buildResult(originFilename, compressedCiObject, thumbnailCiObject, imageInfo);
             }
             // 封装原图返回结果
             return buildResult(originFilename, file, uploadPath, imageInfo);
@@ -77,23 +77,38 @@ public abstract class PictureUploadTemplate {
         }  
     }
 
-    private UploadPictureResult buildResult(String originFilename, CIObject compressedCiObject, CIObject thumbnailCiObject) {
+// 构建上传图片结果
+    private UploadPictureResult buildResult(String originFilename, CIObject compressedCiObject, CIObject thumbnailCiObject, ImageInfo imageInfo) {
+        // 创建上传图片结果对象
         UploadPictureResult uploadPictureResult = new UploadPictureResult();
+        // 获取压缩后的图片宽度
         int picWidth = compressedCiObject.getWidth();
+        // 获取压缩后的图片高度
         int picHeight = compressedCiObject.getHeight();
+        // 计算压缩后的图片比例
         double picScale = NumberUtil.round(picWidth * 1.0 / picHeight, 2).doubleValue();
+        // 设置图片名称
         uploadPictureResult.setPicName(FileUtil.mainName(originFilename));
+        // 设置图片宽度
         uploadPictureResult.setPicWidth(picWidth);
+        // 设置图片高度
         uploadPictureResult.setPicHeight(picHeight);
+        // 设置图片比例
         uploadPictureResult.setPicScale(picScale);
+        // 设置图片格式
         uploadPictureResult.setPicFormat(compressedCiObject.getFormat());
+        // 设置图片颜色
+        uploadPictureResult.setPicColor(imageInfo.getAve());
+        // 设置图片大小
         uploadPictureResult.setPicSize(compressedCiObject.getSize().longValue());
-        // 设置压缩后的地址
+        // 设置图片为压缩后的地址
         uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + compressedCiObject.getKey());
-        // 设置缩略图地址
+        // 设置缩略图
         uploadPictureResult.setThumbnailUrl(cosClientConfig.getHost() + "/" + thumbnailCiObject.getKey());
+        // 返回上传图片结果对象
         return uploadPictureResult;
     }
+
 
 
     /**  
@@ -124,8 +139,10 @@ public abstract class PictureUploadTemplate {
         uploadPictureResult.setPicHeight(picHeight);  
         uploadPictureResult.setPicScale(picScale);  
         uploadPictureResult.setPicFormat(imageInfo.getFormat());  
-        uploadPictureResult.setPicSize(FileUtil.size(file));  
-        uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + uploadPath);  
+        uploadPictureResult.setPicSize(FileUtil.size(file));
+        uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + uploadPath);
+        // 设置颜色
+        uploadPictureResult.setPicColor(imageInfo.getAve());
         return uploadPictureResult;  
     }  
   

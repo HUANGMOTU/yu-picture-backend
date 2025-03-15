@@ -4,7 +4,7 @@ package com.yupi.yupicturebackend.controller;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
-import com.yupi.yupicturebackend.annotation.AuthCheck;
+import com.yupi.yupicturebackend.manager.annotation.AuthCheck;
 import com.yupi.yupicturebackend.common.BaseResponse;
 import com.yupi.yupicturebackend.common.ResultUtils;
 import com.yupi.yupicturebackend.constant.UserConstant;

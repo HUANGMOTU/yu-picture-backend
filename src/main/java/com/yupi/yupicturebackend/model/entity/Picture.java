@@ -130,4 +130,10 @@ public class Picture implements Serializable {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
 }
